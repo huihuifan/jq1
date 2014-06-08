@@ -56,9 +56,7 @@ label {
 }
 
 
-svg {
-  border: 1px solid #ccc;
-}
+
 
 circle.node {
   fill: lightsteelblue;

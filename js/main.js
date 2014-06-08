@@ -1,10 +1,10 @@
 //Angela Fan
 
-var   width = 960,
+var   width = 1060,
       height = 600,
-      dr = 4,
+      dr = .01,
       off = 15,
-      expand = {},
+      expand = {};
 
 var data, net, force, hullg, hull, linkg, link, nodeg, node;
 
@@ -145,13 +145,15 @@ var vis = body.append("svg")
    .attr("width", width)
    .attr("height", height);
  
-d3.json("test.json", function(json) {
+d3.json("outfile.json", function(json) {
   data = json;
   for (var i=0; i<data.links.length; ++i) {
     o = data.links[i];
     o.source = data.nodes[o.source];
     o.target = data.nodes[o.target];
   }
+
+  //console.log(data)
  
   hullg = vis.append("g");
   linkg = vis.append("g");
@@ -162,7 +164,7 @@ d3.json("test.json", function(json) {
   vis.attr("opacity", 1e-6)
     .transition()
       .duration(1000)
-      .attr("opacity", 1);
+      .attr("opacity", .85);
 });
  
 function init() {
@@ -197,9 +199,9 @@ function init() {
     .linkStrength(function(l, i) {
     return 1;
     })
-    .gravity(0.05)   // gravity+charge tweaked to ensure good 'grouped' view (e.g. green group not smack between blue&orange, ...
+    .gravity(.05)   // gravity+charge tweaked to ensure good 'grouped' view 
     .charge(-600)    // ... charge is important to turn single-linked groups to the outside
-    .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball [Swedish Chef, anyone?]
+    .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball 
       .start();
  
   hullg.selectAll("path.hull").remove();
@@ -222,14 +224,14 @@ console.log("hull click", d, arguments, this, expand[d.group]);
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; })
-      .style("stroke-width", function(d) { return d.size || 1; });
+      .style("stroke-width", function(d) { return d.size || .1; });
  
   node = nodeg.selectAll("circle.node").data(net.nodes, nodeid);
   node.exit().remove();
   node.enter().append("circle")
       // if (d.size) -- d.size > 0 when d is a group node.
       .attr("class", function(d) { return "node" + (d.size?"":" leaf"); })
-      .attr("r", function(d) { return d.size ? d.size + dr : dr+1; })
+      .attr("r", function(d) { return d.size ? d.size + dr : dr + .1; })
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .style("fill", function(d) { return fill(d.group); })

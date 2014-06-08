@@ -18,16 +18,13 @@ def graphmltojson(graphfile, outfile):
 	G = nx.read_graphml("test.gml")
 	G = nx.Graph(G)
 	#G = nx.DiGraph.to_undirected(G)
-	print("hello there")
-	print(type(G))	
-	print("wha happening?")
 
 	#finds best community using louvain
 	partition = community.best_partition(G)
  
 	#adds partition/community number as attribute named 'modularitygroup'
 	for n,d in G.nodes_iter(data=True):
-		d['modularitygroup'] = partition[n]
+		d['group'] = partition[n]
  
 	node_link = json_graph.node_link_data(G)
 	json = json_graph.dumps(node_link)
