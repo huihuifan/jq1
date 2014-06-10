@@ -199,8 +199,8 @@ function init() {
     .linkStrength(function(l, i) {
     return 1;
     })
-    .gravity(.75)   // gravity+charge tweaked to ensure good 'grouped' view 
-    .charge(-800)    // ... charge is important to turn single-linked groups to the outside
+    .gravity(1.5)   // gravity+charge tweaked to ensure good 'grouped' view 
+    .charge(-1500)    // ... charge is important to turn single-linked groups to the outside
     .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball 
       .start();
  
@@ -255,8 +255,8 @@ function init() {
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
  
-    node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
+    node.attr("cx", function(d) { return Math.max(d.size, Math.min(width - d.size, d.x)); })
+        .attr("cy", function(d) { return Math.max(d.size, Math.min(height - d.size, d.y)); });
   });
 
   // force.on("tick", tick)
