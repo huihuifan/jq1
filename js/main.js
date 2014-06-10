@@ -244,6 +244,7 @@ function init() {
   node.call(force.drag);
  
   force.on("tick", function() {
+
     if (!hull.empty()) {
       hull.data(convexHulls(net.nodes, getGroup, off))
           .attr("d", drawCluster);
@@ -258,15 +259,21 @@ function init() {
         .attr("cy", function(d) { return d.y; });
   });
 
-  force.on("tick", tick)
+  // force.on("tick", tick)
 
-  function tick() {
-    node.attr("cx", function(d) { return d.x = Math.max(d.size, Math.min(width - d.size, d.x)); })
-        .attr("cy", function(d) { return d.y = Math.max(d.size, Math.min(height - d.size, d.y)); });
+  // function tick() {
 
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-  }
+  //   if (!hull.empty()) {
+  //     hull.data(convexHulls(net.nodes, getGroup, off))
+  //         .attr("d", drawCluster);
+  //   }
+
+  //   link.attr("x1", function(d) { return d.source.x; })
+  //       .attr("y1", function(d) { return d.source.y; })
+  //       .attr("x2", function(d) { return d.target.x; })
+  //       .attr("y2", function(d) { return d.target.y; });
+
+  //   node.attr("cx", function(d) { return d.x = Math.max(d.size, Math.min(width - d.size, d.x)); })
+  //       .attr("cy", function(d) { return d.y = Math.max(d.size, Math.min(height - d.size, d.y)); });
+  // }
 }
