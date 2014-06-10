@@ -1,7 +1,7 @@
 //Angela Fan
 
 var   width = 1060,
-      height = 600,
+      height = 650,
       dr = .01,
       off = 15,
       expand = {};
@@ -199,8 +199,8 @@ function init() {
     .linkStrength(function(l, i) {
     return 1;
     })
-    .gravity(.05)   // gravity+charge tweaked to ensure good 'grouped' view 
-    .charge(-600)    // ... charge is important to turn single-linked groups to the outside
+    .gravity(.75)   // gravity+charge tweaked to ensure good 'grouped' view 
+    .charge(-800)    // ... charge is important to turn single-linked groups to the outside
     .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball 
       .start();
  
@@ -212,7 +212,7 @@ function init() {
       .attr("d", drawCluster)
       .style("fill", function(d) { return fill(d.group); })
       .on("click", function(d) {
-console.log("hull click", d, arguments, this, expand[d.group]);
+// console.log("hull click", d, arguments, this, expand[d.group]);
       expand[d.group] = false; init();
     });
  
@@ -236,7 +236,7 @@ console.log("hull click", d, arguments, this, expand[d.group]);
       .attr("cy", function(d) { return d.y; })
       .style("fill", function(d) { return fill(d.group); })
       .on("click", function(d) {
-console.log("node click", d, arguments, this, expand[d.group]);
+// console.log("node click", d, arguments, this, expand[d.group]);
         expand[d.group] = !expand[d.group];
     init();
       });
@@ -257,4 +257,16 @@ console.log("node click", d, arguments, this, expand[d.group]);
     node.attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
   });
+
+  force.on("tick", tick)
+
+  function tick() {
+    node.attr("cx", function(d) { return d.x = Math.max(d.size, Math.min(width - d.size, d.x)); })
+        .attr("cy", function(d) { return d.y = Math.max(d.size, Math.min(height - d.size, d.y)); });
+
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+  }
 }
