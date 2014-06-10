@@ -142,8 +142,9 @@ function drawCluster(d) {
 var body = d3.select("body");
  
 var vis = body.append("svg")
-   .attr("width", width)
-   .attr("height", height);
+    .attr("class", "svg")
+    .attr("width", width)
+    .attr("height", height);
  
 d3.json("outfile.json", function(json) {
   data = json;

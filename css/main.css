@@ -38,6 +38,36 @@ text-align: center;
 }
 
 /*page styles*/
+#page_header {
+  background-color: #547ec8;
+  height: 90px;
+  margin: 0px auto 10px auto;
+  border-bottom: 2px #4e4e4e solid;
+}
+
+#page_title {
+  font-size: 20px;
+  margin: 0px auto 0px auto;
+  line-height: 50px;
+  text-align: center;
+}
+
+#page_description {
+  margin: 0px auto 0px auto;
+  left: 0;
+  right: 0;
+  font-size: 14px;
+  text-align: center;
+  color: black;
+  font-family: Trebuchet, sans-serif;
+}
+
+/*centering the page content*/
+.svg {
+  margin: 0px auto 0px auto;
+  display: block;
+}
+
 body {
   font-family: Trebuchet, sans-serif;
   color: black;
