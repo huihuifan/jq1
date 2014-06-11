@@ -1,7 +1,7 @@
 //Angela Fan
 
 var   width = 1060,
-      height = 650,
+      height = 700,
       dr = .01,
       off = 15,
       expand = {};
@@ -150,7 +150,7 @@ var vis = body.append("svg")
 vis.append("svg:rect")
   .attr("class", "border_box")
   .attr("width", width)
-  .attr("height", height)
+  .attr("height", height-50)
   .style("stroke", "black")
   .style("stroke-width", "1px")
   .style("fill", "white");
@@ -185,7 +185,7 @@ function init() {
   force = d3.layout.force()
       .nodes(net.nodes)
       .links(net.links)
-      .size([width, height])
+      .size([width, height-50])
       .linkDistance(function(l, i) {
       var n1 = l.source, n2 = l.target;
     // larger distance for bigger groups:
@@ -266,7 +266,7 @@ function init() {
         .attr("y2", function(d) { return d.target.y; });
  
     node.attr("cx", function(d) { return Math.max(d.size, Math.min(width - d.size, d.x)); })
-        .attr("cy", function(d) { return Math.max(d.size, Math.min(height - d.size, d.y)); });
+        .attr("cy", function(d) { return Math.max(d.size, Math.min(height - d.size - 50, d.y)); });
   });
 
   // force.on("tick", tick)
