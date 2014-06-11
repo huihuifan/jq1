@@ -146,6 +146,14 @@ var vis = body.append("svg")
     .attr("class", "svg")
     .attr("width", width)
     .attr("height", height);
+
+vis.append("svg:rect")
+  .attr("class", "border_box")
+  .attr("width", width)
+  .attr("height", height)
+  .style("stroke", "black")
+  .style("stroke-width", "1px")
+  .style("fill", "white");
  
 d3.json("outfile.json", function(json) {
   data = json;
