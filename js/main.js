@@ -14,7 +14,14 @@ var curve = d3.svg.line()
 
 var fill = d3.scale.category20()
             //.range(["#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2"]);  
-   
+
+
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
+
 function noop() { return false; }
  
 function nodeid(n) {
@@ -150,7 +157,7 @@ var vis = body.append("svg")
 vis.append("svg:rect")
   .attr("class", "border_box")
   .attr("width", width)
-  .attr("height", height-50)
+  .attr("height", height)//-50)
   .style("stroke", "black")
   .style("stroke-width", "1px")
   .style("fill", "white");
@@ -185,7 +192,7 @@ function init() {
   force = d3.layout.force()
       .nodes(net.nodes)
       .links(net.links)
-      .size([width, height-50])
+      .size([width, height])//-50])
       .linkDistance(function(l, i) {
       var n1 = l.source, n2 = l.target;
     // larger distance for bigger groups:
@@ -224,6 +231,7 @@ function init() {
       .on("click", function(d) {
 // console.log("hull click", d, arguments, this, expand[d.group]);
       expand[d.group] = false; init();
+      //d3.select(this).moveToFront();
     });
  
   link = linkg.selectAll("line.link").data(net.links, linkid);
@@ -264,9 +272,28 @@ function init() {
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
- 
-    node.attr("cx", function(d) { return Math.max(d.size, Math.min(width - d.size, d.x)); })
-        .attr("cy", function(d) { return Math.max(d.size, Math.min(height - d.size - 50, d.y)); });
+
+    node.attr("cx", function(d) { 
+          var rad = Math.max(d.size, Math.min(width - d.size, d.x))
+
+          if (rad == rad) {
+            return d.r = rad;
+          }
+          else {
+            return d.r = 0;
+          }
+
+        })
+        .attr("cy", function(d) { 
+          var rad = Math.max(d.size, Math.min(height - d.size, d.y)); 
+
+          if (rad == rad) {
+            return d.r = rad;
+          }
+          else {
+            return d.r = 0;
+          }
+        });
   });
 
   // force.on("tick", tick)
