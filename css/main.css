@@ -39,10 +39,8 @@ text-align: center;
 
 /*page styles*/
 #page_header {
-  background-color: lightgray;
   height: 90px;
   margin: 0px auto 10px auto;
-  border-bottom: 2px #4e4e4e solid;
 }
 
 #page_title {
