@@ -252,15 +252,17 @@ function init() {
   link.enter().append("line")
       .attr("class", function(d) {
         if (d.size == 1) {
+          console.log("here")
           return "inner"
         }
       })
-      .attr("class", "link")
+      .classed("link", true)
       .attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; })
       .style("stroke-width", function(d) { 
+        console.log(d.size)
         return d.size || .1; 
       });
  
