@@ -227,6 +227,24 @@ function init() {
       .attr("class", "hull")
       .attr("d", drawCluster)
       .style("fill", function(d) { return fill(d.group); })
+      .on("mouseover", function(d) {
+        
+        d3.select(this)
+          .style("stroke", "#00FF7F")
+          .style("stroke-width", "6px");
+
+        graph_tip.html("<strong>Lab: </strong>" + d.group);
+        graph_tip.show(d);
+      })
+      .on("mouseout", function(d) {
+
+        d3.select(this)
+          .style("stroke", null)
+          .style("stroke-width", null);
+
+        graph_tip.hide(d);
+
+      })
       .on("click", function(d) {
 // console.log("hull click", d, arguments, this, expand[d.group]);
         expand[d.group] = false; init();
@@ -246,9 +264,11 @@ function init() {
       .attr("cy", function(d) { return d.y; })
       .style("fill", function(d) { return fill(d.group); })
       .on("mouseover", function(d) {
+
         d3.select(this)
           .style("stroke-width", "6px")
-          .style("stroke", "#00FF7F")
+          .style("stroke", "#00FF7F");
+
         graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.nodes.length);
         graph_tip.show(d);
       })
