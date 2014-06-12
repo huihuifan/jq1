@@ -184,6 +184,12 @@ d3.json("outfile.json", function(json) {
       .duration(1000)
       .attr("opacity", .85);
 });
+
+var graph_tip = d3.tip()
+  .attr("class", "d3-tip")
+  .offset([0,0]);
+
+vis.call(graph_tip);
  
 function init() {
   if (force) force.stop();
@@ -239,6 +245,19 @@ function init() {
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .style("fill", function(d) { return fill(d.group); })
+      .on("mouseover", function(d) {
+        d3.select(this)
+          .style("stroke-width", "6px")
+          .style("stroke", "red")
+        graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.nodes.length);
+        graph_tip.show(d);
+      })
+      .on("mouseout", function(d) {
+        d3.select(this)
+          .style("stroke-width", null)
+          .style("stroke", null)
+        graph_tip.hide(d)
+      })
       .on("click", function(d) {
 
 // console.log("node click", d, arguments, this, expand[d.group]);
@@ -252,7 +271,7 @@ function init() {
   link.enter().append("line")
       .attr("class", function(d) {
         if (d.size == 1) {
-          console.log("here")
+          //console.log("here")
           return "inner"
         }
       })
@@ -262,7 +281,7 @@ function init() {
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; })
       .style("stroke-width", function(d) { 
-        console.log(d.size)
+        //console.log(d.size)
         return d.size || .1; 
       });
  
