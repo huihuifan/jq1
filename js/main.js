@@ -248,7 +248,7 @@ function init() {
       .on("mouseover", function(d) {
         d3.select(this)
           .style("stroke-width", "6px")
-          .style("stroke", "red")
+          .style("stroke", "#00FF7F")
         graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.nodes.length);
         graph_tip.show(d);
       })
