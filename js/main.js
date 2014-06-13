@@ -184,7 +184,7 @@ $(".slider").on("change", function(){
 
 function transition(arg) {
 
-  console.log("happening")
+  //console.log("happening")
 
   if (arg == null) {
     var current_selection = document.getElementById("range").innerHTML;
