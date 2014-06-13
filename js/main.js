@@ -189,7 +189,7 @@ function transition(arg) {
   if (arg == null) {
     var current_selection = document.getElementById("range").innerHTML;
     var current_file = "outfile_" + current_selection + ".json";
-    console.log(current_file)
+    //console.log(current_file)
   }
   else {
     var current_file = arg
