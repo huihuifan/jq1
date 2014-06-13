@@ -170,9 +170,20 @@ var current_file = "outfile_" + current_selection + ".json";
 
 //console.log(current_file)
 
-d3.select(".slider").on("click", transition(current_file));
+//console.log($(".slider").on("change", function(){console.log(this.value)}));
+
+//transition("outfile_2013.json");
+
+$(".slider").on("change", function(){
+  transition(current_file);
+});
 
 function transition(current_file) {
+
+  console.log("happening")
+
+  d3.selectAll("g").remove();
+
   d3.json(current_file, function(json) {
     data = json;
     for (var i=0; i<data.links.length; ++i) {
