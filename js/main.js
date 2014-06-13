@@ -174,21 +174,31 @@ vis.append("svg:rect")
 
 //transition("outfile_2013.json");
 
-//$(document).ready(transition("outfile_2013.json"));
+$(document).ready(
+  transition("outfile_2013.json")
+);
 
 $(".slider").on("change", function(){
   transition();
 });
 
-function transition() {
+function transition(arg) {
 
   console.log("happening")
 
-  var current_selection = document.getElementById("range").innerHTML;
+  if (arg == null) {
+    var current_selection = document.getElementById("range").innerHTML;
+    var current_file = "outfile_" + current_selection + ".json";
+  }
+  else {
+    var current_file = arg
+  }
+
+  //var current_selection = document.getElementById("range").innerHTML;
 
   //console.log(current_selection)
 
-  var current_file = "outfile_" + current_selection + ".json";
+  //var current_file = "outfile_" + current_selection + ".json";
 
   d3.selectAll(".hull").remove();
   d3.selectAll(".node").remove();
