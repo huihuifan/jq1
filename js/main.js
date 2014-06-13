@@ -170,188 +170,192 @@ var current_file = "outfile_" + current_selection + ".json";
 
 //console.log(current_file)
 
-d3.json("outfile_13.json", function(json) {
-  data = json;
-  for (var i=0; i<data.links.length; ++i) {
-    o = data.links[i];
-    o.source = data.nodes[o.source];
-    o.target = data.nodes[o.target];
-  }
+d3.select(".slider").on("click", transition(current_file));
 
-  //console.log(data)
- 
-  nodeg = vis.append("g");
-  hullg = vis.append("g");
-  linkg = vis.append("g");
-
- 
-  init();
- 
-  vis.attr("opacity", 1e-6)
-    .transition()
-      .duration(1000)
-      .attr("opacity", .85);
-});
-
-var graph_tip = d3.tip()
-  .attr("class", "d3-tip")
-  .offset([0,0]);
-
-vis.call(graph_tip);
- 
-function init() {
-  if (force) force.stop();
- 
-  net = network(data, net, getGroup, expand);
- 
-  force = d3.layout.force()
-      .nodes(net.nodes)
-      .links(net.links)
-      .size([width, height])//-50])
-      .linkDistance(function(l, i) {
-      var n1 = l.source, n2 = l.target;
-  
-    return 30 +
-      Math.min(20 * Math.min((n1.size || (n1.group != n2.group ? n1.group_data.size : 0)),
-                             (n2.size || (n1.group != n2.group ? n2.group_data.size : 0))),
-           -30 +
-           30 * Math.min((n1.link_count || (n1.group != n2.group ? n1.group_data.link_count : 0)),
-                         (n2.link_count || (n1.group != n2.group ? n2.group_data.link_count : 0))),
-           100);
-      //return 150;
-    })
-    .linkStrength(function(l, i) {
-    return 1;
-    })
-    .gravity(1.5)   // gravity+charge tweaked to ensure good 'grouped' view 
-    .charge(-1500)    // ... charge is important to turn single-linked groups to the outside
-    .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball 
-      .start();
- 
-  hullg.selectAll("path.hull").remove();
-  hull = hullg.selectAll("path.hull")
-      .data(convexHulls(net.nodes, getGroup, off))
-    .enter().append("path")
-      .attr("class", "hull")
-      .attr("d", drawCluster)
-      .style("fill", function(d) { return fill(d.group); })
-      .on("mouseover", function(d) {
-        
-        d3.select(this)
-          .style("stroke", "#00FF7F")
-          .style("stroke-width", "6px");
-
-        graph_tip.html("<strong>Lab: </strong>" + d.group);
-        graph_tip.show(d);
-      })
-      .on("mouseout", function(d) {
-
-        d3.select(this)
-          .style("stroke", null)
-          .style("stroke-width", null);
-
-        graph_tip.hide(d);
-
-      })
-      .on("click", function(d) {
-// console.log("hull click", d, arguments, this, expand[d.group]);
-        expand[d.group] = false; init();
-    });
-
-  //console.log(d3.selectAll(".hull"))
-  //d3.selectAll("")
-
-  node = nodeg.selectAll("circle.node").data(net.nodes, nodeid);
-
-  node.exit().remove();
-  node.enter().append("circle")
-      // if (d.size) -- d.size > 0 when d is a group node.
-      .attr("class", function(d) { return "node" + (d.size?"":" leaf"); })
-      .attr("r", function(d) { return d.size ? d.size + dr : dr + .1; })
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .style("fill", function(d) { return fill(d.group); })
-      .on("mouseover", function(d) {
-
-        d3.select(this)
-          .style("stroke-width", "6px")
-          .style("stroke", "#00FF7F");
-
-        graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.nodes.length);
-        graph_tip.show(d);
-      })
-      .on("mouseout", function(d) {
-        d3.select(this)
-          .style("stroke-width", null)
-          .style("stroke", null)
-        graph_tip.hide(d)
-      })
-      .on("click", function(d) {
-
-// console.log("node click", d, arguments, this, expand[d.group]);
-        expand[d.group] = !expand[d.group];
-
-    init();
-      });
- 
-  link = nodeg.selectAll("line.link").data(net.links, linkid);
-  link.exit().remove();
-  link.enter().append("line")
-      .attr("class", function(d) {
-        if (d.size == 1) {
-          //console.log("here")
-          return "inner"
-        }
-      })
-      .classed("link", true)
-      .attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; })
-      .style("stroke-width", function(d) { 
-        //console.log(d.size)
-        return d.size || .1; 
-      });
- 
-  d3.selectAll(".node").moveToFront();
-  d3.selectAll(".hull").moveToFront();
-  d3.selectAll(".inner").moveToFront();
-
-  node.call(force.drag);
- 
-  force.on("tick", function() {
-
-    if (!hull.empty()) {
-      hull.data(convexHulls(net.nodes, getGroup, off))
-          .attr("d", drawCluster);
+function transition(current_file) {
+  d3.json(current_file, function(json) {
+    data = json;
+    for (var i=0; i<data.links.length; ++i) {
+      o = data.links[i];
+      o.source = data.nodes[o.source];
+      o.target = data.nodes[o.target];
     }
- 
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
 
-    node.attr("cx", function(d) { 
-          var rad = Math.max(d.size, Math.min(width - d.size, d.x))
-
-          if (rad == rad) {
-            return d.r = rad;
-          }
-          else {
-            return d.r = 0;
-          }
-
-        })
-        .attr("cy", function(d) { 
-          var rad = Math.max(d.size, Math.min(height - d.size, d.y)); 
-
-          if (rad == rad) {
-            return d.r = rad;
-          }
-          else {
-            return d.r = 0;
-          }
-        });
+    //console.log(data)
+   
+    nodeg = vis.append("g");
+    hullg = vis.append("g");
+    linkg = vis.append("g");
+   
+    init();
+   
+    vis.attr("opacity", 1e-6)
+      .transition()
+        .duration(1000)
+        .attr("opacity", .85);
   });
 
+  var graph_tip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([0,0]);
+
+  vis.call(graph_tip);
+   
+  function init() {
+    if (force) force.stop();
+   
+    net = network(data, net, getGroup, expand);
+   
+    force = d3.layout.force()
+        .nodes(net.nodes)
+        .links(net.links)
+        .size([width, height])//-50])
+        .linkDistance(function(l, i) {
+        var n1 = l.source, n2 = l.target;
+    
+      return 30 +
+        Math.min(20 * Math.min((n1.size || (n1.group != n2.group ? n1.group_data.size : 0)),
+                               (n2.size || (n1.group != n2.group ? n2.group_data.size : 0))),
+             -30 +
+             30 * Math.min((n1.link_count || (n1.group != n2.group ? n1.group_data.link_count : 0)),
+                           (n2.link_count || (n1.group != n2.group ? n2.group_data.link_count : 0))),
+             100);
+        //return 150;
+      })
+      .linkStrength(function(l, i) {
+      return 1;
+      })
+      .gravity(1.5)   // gravity+charge tweaked to ensure good 'grouped' view 
+      .charge(-1500)    // ... charge is important to turn single-linked groups to the outside
+      .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball 
+        .start();
+   
+    hullg.selectAll("path.hull").remove();
+    hull = hullg.selectAll("path.hull")
+        .data(convexHulls(net.nodes, getGroup, off))
+      .enter().append("path")
+        .attr("class", "hull")
+        .attr("d", drawCluster)
+        .style("fill", function(d) { return fill(d.group); })
+        .on("mouseover", function(d) {
+          
+          d3.select(this)
+            .style("stroke", "#00FF7F")
+            .style("stroke-width", "6px");
+
+          graph_tip.html("<strong>Lab: </strong>" + d.group);
+          graph_tip.show(d);
+        })
+        .on("mouseout", function(d) {
+
+          d3.select(this)
+            .style("stroke", null)
+            .style("stroke-width", null);
+
+          graph_tip.hide(d);
+
+        })
+        .on("click", function(d) {
+  // console.log("hull click", d, arguments, this, expand[d.group]);
+          expand[d.group] = false; init();
+      });
+
+    //console.log(d3.selectAll(".hull"))
+    //d3.selectAll("")
+
+    node = nodeg.selectAll("circle.node").data(net.nodes, nodeid);
+
+    node.exit().remove();
+    node.enter().append("circle")
+        // if (d.size) -- d.size > 0 when d is a group node.
+        .attr("class", function(d) { return "node" + (d.size?"":" leaf"); })
+        .attr("r", function(d) { return d.size ? d.size + dr : dr + .1; })
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+        .style("fill", function(d) { return fill(d.group); })
+        .on("mouseover", function(d) {
+
+          d3.select(this)
+            .style("stroke-width", "6px")
+            .style("stroke", "#00FF7F");
+
+          graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.nodes.length);
+          graph_tip.show(d);
+        })
+        .on("mouseout", function(d) {
+          d3.select(this)
+            .style("stroke-width", null)
+            .style("stroke", null)
+          graph_tip.hide(d)
+        })
+        .on("click", function(d) {
+
+  // console.log("node click", d, arguments, this, expand[d.group]);
+          expand[d.group] = !expand[d.group];
+
+      init();
+        });
+   
+    link = nodeg.selectAll("line.link").data(net.links, linkid);
+    link.exit().remove();
+    link.enter().append("line")
+        .attr("class", function(d) {
+          if (d.size == 1) {
+            //console.log("here")
+            return "inner"
+          }
+        })
+        .classed("link", true)
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+        .style("stroke-width", function(d) { 
+          //console.log(d.size)
+          return d.size || .1; 
+        });
+   
+    d3.selectAll(".node").moveToFront();
+    d3.selectAll(".hull").moveToFront();
+    d3.selectAll(".inner").moveToFront();
+
+    node.call(force.drag);
+   
+    force.on("tick", function() {
+
+      if (!hull.empty()) {
+        hull.data(convexHulls(net.nodes, getGroup, off))
+            .attr("d", drawCluster);
+      }
+   
+      link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+      node.attr("cx", function(d) { 
+            var rad = Math.max(d.size, Math.min(width - d.size, d.x))
+
+            if (rad == rad) {
+              return d.r = rad;
+            }
+            else {
+              return d.r = 0;
+            }
+
+          })
+          .attr("cy", function(d) { 
+            var rad = Math.max(d.size, Math.min(height - d.size, d.y)); 
+
+            if (rad == rad) {
+              return d.r = rad;
+            }
+            else {
+              return d.r = 0;
+            }
+          });
+    });
+
+  }
 }
+
