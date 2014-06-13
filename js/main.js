@@ -174,6 +174,8 @@ var current_file = "outfile_" + current_selection + ".json";
 
 //transition("outfile_2013.json");
 
+$(document).ready(transition("outfile_2013.json"));
+
 $(".slider").on("change", function(){
   transition(current_file);
 });
@@ -182,6 +184,9 @@ function transition(current_file) {
 
   console.log("happening")
 
+  d3.selectAll(".hull").remove();
+  d3.selectAll(".node").remove();
+  d3.selectAll(".inner link").remove();
   d3.selectAll("g").remove();
 
   d3.json(current_file, function(json) {

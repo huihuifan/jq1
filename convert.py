@@ -15,7 +15,7 @@ def graphmltojson(graphfile, outfile):
 	>>> python convert.py -i mygraph.graphml -o outfile.json
 	"""
 	
-	G = nx.read_graphml("test.gml")
+	G = nx.read_graphml("gr11-12.graphml")
 	G = nx.Graph(G)
 	#G = nx.DiGraph.to_undirected(G)
 
