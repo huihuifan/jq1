@@ -368,6 +368,9 @@ function transition(arg) {
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
 
+
+      node.each(collide(.5));
+
       node.attr("cx", function(d) { 
             var rad = Math.max(d.size, Math.min(width - d.size, d.x))
 
@@ -393,4 +396,33 @@ function transition(arg) {
 
   }
 }
+
+
+function collide(alpha) {
+  var quadtree = d3.geom.quadtree(nodes);
+  return function(d) {
+    var r = d.radius + maxRadius + 5,
+        nx1 = d.source.x - d.r,
+        nx2 = d.target.x + d.r,
+        ny1 = d.source.y - d.r,
+        ny2 = d.target.y + d.r;
+    quadtree.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d)) {
+        var x = d.source.x - quad.point.x,
+            y = d.source.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.radius + quad.point.radius + 5;
+        if (l < r) {
+          l = (l - r) / l * alpha;
+          d.x -= x *= l;
+          d.y -= y *= l;
+          quad.point.x += x;
+          quad.point.y += y;
+        }
+      }
+      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+    });
+  };
+}
+
 
