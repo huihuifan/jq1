@@ -162,11 +162,11 @@ vis.append("svg:rect")
   .style("stroke-width", "1px")
   .style("fill", "white");
 
-var current_selection = document.getElementById("range").innerHTML;
+//var current_selection = document.getElementById("range").innerHTML;
 
 //console.log(current_selection)
 
-var current_file = "outfile_" + current_selection + ".json";
+//var current_file = "outfile_" + current_selection + ".json";
 
 //console.log(current_file)
 
@@ -174,15 +174,21 @@ var current_file = "outfile_" + current_selection + ".json";
 
 //transition("outfile_2013.json");
 
-$(document).ready(transition("outfile_2013.json"));
+//$(document).ready(transition("outfile_2013.json"));
 
 $(".slider").on("change", function(){
-  transition(current_file);
+  transition();
 });
 
-function transition(current_file) {
+function transition() {
 
   console.log("happening")
+
+  var current_selection = document.getElementById("range").innerHTML;
+
+  //console.log(current_selection)
+
+  var current_file = "outfile_" + current_selection + ".json";
 
   d3.selectAll(".hull").remove();
   d3.selectAll(".node").remove();
