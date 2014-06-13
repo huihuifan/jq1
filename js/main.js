@@ -157,7 +157,7 @@ var vis = body.append("svg")
 vis.append("svg:rect")
   .attr("class", "border_box")
   .attr("width", width)
-  .attr("height", height)//-50)
+  .attr("height", height-50)
   .style("stroke", "black")
   .style("stroke-width", "1px")
   .style("fill", "white");
