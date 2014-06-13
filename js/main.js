@@ -161,7 +161,15 @@ vis.append("svg:rect")
   .style("stroke", "black")
   .style("stroke-width", "1px")
   .style("fill", "white");
- 
+
+var current_selection = document.getElementById("range").innerHTML;
+
+//console.log(current_selection)
+
+var current_file = "outfile_" + current_selection + ".json";
+
+//console.log(current_file)
+
 d3.json("outfile_13.json", function(json) {
   data = json;
   for (var i=0; i<data.links.length; ++i) {
