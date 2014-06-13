@@ -162,7 +162,7 @@ vis.append("svg:rect")
   .style("stroke-width", "1px")
   .style("fill", "white");
  
-d3.json("outfile.json", function(json) {
+d3.json("outfile_13.json", function(json) {
   data = json;
   for (var i=0; i<data.links.length; ++i) {
     o = data.links[i];

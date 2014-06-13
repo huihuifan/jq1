@@ -43,6 +43,12 @@ text-align: center;
   margin: 0px auto 10px auto;
 }
 
+#page_body {
+  margin: 10px auto 10px auto;
+  width: 10%;
+  text-align: center;
+}
+
 #page_title {
   font-size: 20px;
   margin: 0px auto 0px auto;

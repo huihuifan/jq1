@@ -13,9 +13,25 @@
   
 </head>
 <body>
+
 	<div id="page_header">
     <div id="page_title">Jq1 Co-authorship Network</div>
     <div id="page_description">This shows ... stuff here ... </div>
   </div>
-	<script src="/js/main.js"></script>
+
+  <div id="page_body">
+    <input type="range" min="2012" max="2013" value="2013" step="1" onchange="showValue(this.value)"/>
+    <span id="range">2013</span>
+
+    <script type="text/javascript">
+      function showValue(newValue) 
+      {
+        document.getElementById("range").innerHTML = newValue;
+      }
+    
+    </script>
+  </div>
+	
+  <script src="/js/main.js"></script>
+
 </body>
