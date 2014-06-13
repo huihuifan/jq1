@@ -311,7 +311,9 @@ function transition(arg) {
             .style("stroke-width", "6px")
             .style("stroke", "#00FF7F");
 
-          graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.nodes.length);
+          //console.log(d)
+
+          graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.size);
           graph_tip.show(d);
         })
         .on("mouseout", function(d) {
