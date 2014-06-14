@@ -157,7 +157,7 @@ var vis = body.append("svg")
 vis.append("svg:rect")
   .attr("class", "border_box")
   .attr("width", width)
-  .attr("height", height-50)
+  .attr("height", height-20)
   .style("stroke", "black")
   .style("stroke-width", "1px")
   .style("fill", "white");
@@ -371,6 +371,7 @@ function transition(arg) {
       node
           //.each(collide(.5))
           .attr("cx", function(d) { 
+            
             var rad = Math.max(d.size, Math.min(width - d.size, d.x))
 
             if (rad == rad) {
@@ -380,9 +381,11 @@ function transition(arg) {
               return d.r = 0;
             }
 
+
           })
           .attr("cy", function(d) { 
-            var rad = Math.max(d.size, Math.min(height - d.size, d.y)); 
+
+            var rad = Math.max(d.size, Math.min(height - d.size, d.x))
 
             if (rad == rad) {
               return d.r = rad;
@@ -390,13 +393,16 @@ function transition(arg) {
             else {
               return d.r = 0;
             }
+
           });
+
     });
 
   }
 }
 
 
+<<<<<<< HEAD
 function collide(alpha) {
   var quadtree = d3.geom.quadtree(net.nodes);
   return function(d) {
@@ -423,3 +429,35 @@ function collide(alpha) {
     });
   };
 }
+=======
+// function collide(alpha) {
+
+//   var quadtree = d3.geom.quadtree(net.nodes);
+
+//   return function(d) {
+//     var r = d.r,
+//         nx1 = d.x - r,
+//         nx2 = d.x + r,
+//         ny1 = d.y - r,
+//         ny2 = d.y + r;
+//     quadtree.visit(function(quad, x1, y1, x2, y2) {
+//       if (quad.point && (quad.point !== d)) {
+//         var x = d.x - quad.point.x,
+//             y = d.y - quad.point.y,
+//             l = Math.sqrt(x * x + y * y),
+//             r = d.r + quad.point.r;
+//         if (l < r) {
+//           l = (l - r) / l * alpha;
+//           d.x -= x *= l;
+//           d.y -= y *= l;
+//           quad.point.x += x;
+//           quad.point.y += y;
+//         }
+//       }
+//       return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+//     });
+//   };
+// }
+
+
+>>>>>>> 15481722508a3ea98e2d04f35b642527072ee0b9
