@@ -43,6 +43,10 @@ text-align: center;
   margin: 0px auto 10px auto;
 }
 
+#pad_div {
+  margin: 50px auto 50px auto;
+}
+
 #page_body {
   margin: 10px auto 10px auto;
   width: 10%;
