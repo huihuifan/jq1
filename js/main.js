@@ -300,7 +300,7 @@ function transition(arg) {
 
     node.exit().remove();
     node.enter().append("circle")
-        // if (d.size) -- d.size > 0 when d is a group node.
+        //if (d.size) -- d.size > 0 when d is a group node.
         .attr("class", function(d) { return "node" + (d.size?"":" leaf"); })
         .attr("r", function(d) { return d.size ? d.size + dr : dr + .1; })
         .attr("cx", function(d) { return d.x; })
@@ -336,7 +336,6 @@ function transition(arg) {
     link.enter().append("line")
         .attr("class", function(d) {
           if (d.size == 1) {
-            //console.log("here")
             return "inner"
           }
         })
@@ -362,64 +361,46 @@ function transition(arg) {
         hull.data(convexHulls(net.nodes, getGroup, off))
             .attr("d", drawCluster);
       }
-   
-      link.attr("x1", function(d) { return d.source.x; })
-          .attr("y1", function(d) { return d.source.y; })
-          .attr("x2", function(d) { return d.target.x; })
-          .attr("y2", function(d) { return d.target.y; });
 
       node
-          //.each(collide(.5))
-          .attr("cx", function(d) { 
-            var rad = Math.max(d.size, Math.min(width - d.size, d.x))
+        .each(collide(.5))
+        .attr("cx", function(d) { return d.x = Math.max(d.size, Math.min(width - d.size, d.x)); })
+        .attr("cy", function(d) { return d.y = Math.max(d.size, Math.min(height - d.size, d.y)); });
 
-            if (rad == rad) {
-              return d.r = rad;
-            }
-            else {
-              return d.r = 0;
-            }
+      link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
 
-          })
-          .attr("cy", function(d) { 
-            var rad = Math.max(d.size, Math.min(height - d.size, d.y)); 
-
-            if (rad == rad) {
-              return d.r = rad;
-            }
-            else {
-              return d.r = 0;
-            }
-          });
     });
 
   }
 }
 
 
-// function collide(alpha) {
-//   var quadtree = d3.geom.quadtree(net.nodes);
-//   return function(d) {
-//     var r = d.r + 50,
-//         nx1 = d.x - r,
-//         nx2 = d.x + r,
-//         ny1 = d.y - r,
-//         ny2 = d.y + r;
-//     quadtree.visit(function(quad, x1, y1, x2, y2) {
-//       if (quad.point && (quad.point !== d)) {
-//         var x = d.x - quad.point.x,
-//             y = d.y - quad.point.y,
-//             l = Math.sqrt(x * x + y * y),
-//             r = d.r + quad.point.r;
-//         if (l < r) {
-//           l = (l - r) / l * alpha;
-//           d.x -= x *= l;
-//           d.y -= y *= l;
-//           quad.point.x += x;
-//           quad.point.y += y;
-//         }
-//       }
-//       return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-//     });
-//   };
-// }
+function collide(alpha) {
+  var quadtree = d3.geom.quadtree(net.nodes);
+  return function(d) {
+    var r = d.size + 50,
+        nx1 = d.x - r,
+        nx2 = d.x + r,
+        ny1 = d.y - r,
+        ny2 = d.y + r;
+    quadtree.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d)) {
+        var x = d.x - quad.point.x,
+            y = d.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.size + quad.point.size;
+        if (l < r) {
+          l = (l - r) / l * alpha;
+          d.x -= x *= l;
+          d.y -= y *= l;
+          quad.point.x += x;
+          quad.point.y += y;
+        }
+      }
+      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+    });
+  };
+}
