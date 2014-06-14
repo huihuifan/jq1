@@ -369,7 +369,7 @@ function transition(arg) {
           .attr("y2", function(d) { return d.target.y; });
 
       node
-          .each(collide(.5))
+          //.each(collide(.5))
           .attr("cx", function(d) { 
             var rad = Math.max(d.size, Math.min(width - d.size, d.x))
 
