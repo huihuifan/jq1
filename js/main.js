@@ -258,8 +258,8 @@ function transition(arg) {
       .linkStrength(function(l, i) {
       return 1;
       })
-      .gravity(.5)   // gravity+charge tweaked to ensure good 'grouped' view 
-      .charge(-0)    // ... charge is important to turn single-linked groups to the outside
+      .gravity(1.5)   // gravity+charge tweaked to ensure good 'grouped' view 
+      .charge(-1500)    // ... charge is important to turn single-linked groups to the outside
       .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball 
         .start();
    
@@ -363,41 +363,36 @@ function transition(arg) {
             .attr("d", drawCluster);
       }
    
-      link.attr("x1", function(d) { 
-        console.log(d)
-        return d.source.x; })
+      link.attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
 
       node
-          .each(collide(.5))
+          //.each(collide(.5))
           .attr("cx", function(d) { 
 
-            var rad_x = Math.max(d.size, Math.min(width - d.size, d.x));
+            var rad = Math.max(d.size, Math.min(width - d.size, d.x))
 
-            if (rad_x == rad_x) {
-              d.r = rad_x;
+            if (rad == rad) {
+              return d.r = rad;
             }
             else {
-              d.r = 0;
+              return d.r = 0;
             }
 
-            return d.x = rad_x;
 
           })
           .attr("cy", function(d) { 
 
-            var rad_y = Math.max(d.size, Math.min(height - d.size, d.y)); 
+            var rad = Math.max(d.size, Math.min(height - d.size, d.x))
 
-            if (rad_y == rad_y) {
-              d.r = rad_y;
+            if (rad == rad) {
+              return d.r = rad;
             }
             else {
-              d.r = 0;
+              return d.r = 0;
             }
-
-            return d.y = rad_y;
 
           });
 
@@ -407,33 +402,33 @@ function transition(arg) {
 }
 
 
-function collide(alpha) {
+// function collide(alpha) {
 
-  var quadtree = d3.geom.quadtree(net.nodes);
+//   var quadtree = d3.geom.quadtree(net.nodes);
 
-  return function(d) {
-    var r = d.r,
-        nx1 = d.x - r,
-        nx2 = d.x + r,
-        ny1 = d.y - r,
-        ny2 = d.y + r;
-    quadtree.visit(function(quad, x1, y1, x2, y2) {
-      if (quad.point && (quad.point !== d)) {
-        var x = d.x - quad.point.x,
-            y = d.y - quad.point.y,
-            l = Math.sqrt(x * x + y * y),
-            r = d.r + quad.point.r;
-        if (l < r) {
-          l = (l - r) / l * alpha;
-          d.x -= x *= l;
-          d.y -= y *= l;
-          quad.point.x += x;
-          quad.point.y += y;
-        }
-      }
-      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-    });
-  };
-}
+//   return function(d) {
+//     var r = d.r,
+//         nx1 = d.x - r,
+//         nx2 = d.x + r,
+//         ny1 = d.y - r,
+//         ny2 = d.y + r;
+//     quadtree.visit(function(quad, x1, y1, x2, y2) {
+//       if (quad.point && (quad.point !== d)) {
+//         var x = d.x - quad.point.x,
+//             y = d.y - quad.point.y,
+//             l = Math.sqrt(x * x + y * y),
+//             r = d.r + quad.point.r;
+//         if (l < r) {
+//           l = (l - r) / l * alpha;
+//           d.x -= x *= l;
+//           d.y -= y *= l;
+//           quad.point.x += x;
+//           quad.point.y += y;
+//         }
+//       }
+//       return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+//     });
+//   };
+// }
 
 
