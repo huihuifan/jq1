@@ -44,7 +44,7 @@ function network(data, prev, index, expand) {
       lm = {},    // link map
       gn = {},    // previous group nodes
       gc = {},    // previous group centroids
-      nodes = [], // output nodes
+      nodes = nodes || [], // output nodes- should take care of appending to the existing node
       links = []; // output links
  
   // process previous nodes for reuse or centroid calculation
@@ -55,7 +55,7 @@ function network(data, prev, index, expand) {
         gn[i] = n;
         n.size = 0;
       } else {
-        o = gc[i] || (gc[i] = {x:0,y:0,count:0});
+        o = gc[i] || (gc[i] = { x:0, y:0, count:0 });
         o.x += n.x;
         o.y += n.y;
         o.count += 1;
@@ -289,7 +289,7 @@ function transition(arg) {
 
         })
         .on("click", function(d) {
-  // console.log("hull click", d, arguments, this, expand[d.group]);
+          //console.log("hull click", d, arguments, this, expand[d.group]);
           expand[d.group] = false; init();
       });
 
