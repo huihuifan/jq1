@@ -15,6 +15,20 @@ var curve = d3.svg.line()
 var fill = d3.scale.category20()
             //.range(["#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2"]);  
 
+var drag = d3.behavior.drag()
+  .origin(Object)
+  .on("drag", function(){ dragmove(this); });
+
+function dragmove(dragged) {
+  var x = d3.select(dragged).attr("cx");
+  var y = d3.select(dragged).attr("cy");
+  var r = d3.select(dragged).attr("r")
+  d3.select(dragged)
+    .attr("cx", Math.max(r, Math.min(width - r,
+    +x + d3.event.dx)))
+    .attr("cy", Math.max(r, Math.min(height - r,
+    +y + d3.event.dy)));
+}
 
 d3.selection.prototype.moveToFront = function() {
   return this.each(function(){
@@ -372,6 +386,7 @@ function transition(arg) {
   d3.selectAll(".inner").moveToFront();
 
   node.call(force.drag);
+  node.call(drag);
  
   node.transition()
     .duration(750)
