@@ -273,22 +273,42 @@ function transition(arg) {
     .linkStrength(function(l, i) {
     return 1;
     })
-    .gravity(0.05)   // gravity+charge tweaked to ensure good 'grouped' view (e.g. green group not smack between blue&orange, ...
-    .charge(-600)    // ... charge is important to turn single-linked groups to the outside
+    .gravity(1.5)   // gravity+charge tweaked to ensure good 'grouped' view (e.g. green group not smack between blue&orange, ...
+    .charge(-1600)    // ... charge is important to turn single-linked groups to the outside
     .friction(0.5)   // friction adjusted to get dampened display: less bouncy bouncy ball [Swedish Chef, anyone?]
       .start();
  
   hullg.selectAll("path.hull").remove();
+  
   hull = hullg.selectAll("path.hull")
-      .data(convexHulls(net.nodes, getGroup, off))
-    .enter().append("path")
-      .attr("class", "hull")
-      .attr("d", drawCluster)
-      .style("fill", function(d) { return fill(d.group); })
-      .on("click", function(d) {
-console.log("hull click", d, arguments, this, expand[d.group]);
-      expand[d.group] = false; init();
-    });
+        .data(convexHulls(net.nodes, getGroup, off))
+      .enter().append("path")
+        .attr("class", "hull")
+        .attr("d", drawCluster)
+        .style("fill", function(d) { return fill(d.group); })
+        .on("mouseover", function(d) {
+         
+          d3.select(this)
+            .style("stroke", "#00FF7F")
+            .style("stroke-width", "6px");
+
+          graph_tip.html("<strong>Lab: </strong>" + d.group);
+          graph_tip.show(d);
+        })
+        .on("mouseout", function(d) {
+
+          d3.select(this)
+            .style("stroke", null)
+            .style("stroke-width", null);
+
+          graph_tip.hide(d);
+
+        })
+        .on("click", function(d) {
+
+          console.log("hull click", d, arguments, this, expand[d.group]);
+          expand[d.group] = false; init();
+      });
  
   link = linkg.selectAll("line.link").data(net.links, linkid);
   link.exit().remove();
@@ -328,11 +348,8 @@ console.log("node click", d, arguments, this, expand[d.group]);
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
  
-    node
-          .each(collide(.5))
-          .attr("cx", function(d) { return d.x = Math.max(d.size, Math.min(width - d.size, d.x)); })
-          .attr("cy", function(d) { return d.y = Math.max(d.size, Math.min(height - d.size, d.y)); });
-
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
   });
 }
 }
