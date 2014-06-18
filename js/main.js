@@ -1,7 +1,7 @@
 //Angela Fan
 
 var   width = 1060,
-      height = 900,
+      height = 800,
       dr = .01,
       off = 15,
       expand = {};
@@ -306,7 +306,7 @@ function transition(arg) {
         })
         .on("click", function(d) {
 
-          console.log("hull click", d, arguments, this, expand[d.group]);
+          //console.log("hull click", d, arguments, this, expand[d.group]);
           expand[d.group] = false; init();
       });
  
@@ -373,6 +373,16 @@ function transition(arg) {
 
   node.call(force.drag);
  
+  node.transition()
+    .duration(750)
+    .delay(function(d,i) { return i*5; })
+    .attrTween("size", function(d) {
+      var i = d3.interpolate(0, d.size);
+      return function(t) { return d.size = i(t); };
+    })
+
+
+
   force.on("tick", function() {
     if (!hull.empty()) {
       hull.data(convexHulls(net.nodes, getGroup, off))
