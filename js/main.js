@@ -310,31 +310,67 @@ function transition(arg) {
           expand[d.group] = false; init();
       });
  
-  link = linkg.selectAll("line.link").data(net.links, linkid);
-  link.exit().remove();
-  link.enter().append("line")
-      .attr("class", "link")
-      .attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; })
-      .style("stroke-width", function(d) { return d.size || 1; });
  
   node = nodeg.selectAll("circle.node").data(net.nodes, nodeid);
   node.exit().remove();
+  
   node.enter().append("circle")
-      // if (d.size) -- d.size > 0 when d is a group node.
-      .attr("class", function(d) { return "node" + (d.size?"":" leaf"); })
-      .attr("r", function(d) { return d.size ? d.size + dr : dr+1; })
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .style("fill", function(d) { return fill(d.group); })
-      .on("click", function(d) {
-console.log("node click", d, arguments, this, expand[d.group]);
-        expand[d.group] = !expand[d.group];
-    init();
-      });
+        .attr("class", function(d) { return "node" + (d.size?"":" leaf"); })
+        .attr("r", function(d) { return d.size ? d.size + dr : dr + 1; })
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+        .style("fill", function(d) { return fill(d.group); })
+        .on("mouseover", function(d) {
+
+          d3.select(this)
+            .style("stroke-width", "6px")
+            .style("stroke", "#00FF7F");
+
+          //console.log(d)
+
+          graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.size);
+          graph_tip.show(d);
+        })
+        .on("mouseout", function(d) {
+          d3.select(this)
+            .style("stroke-width", null)
+            .style("stroke", null)
+          graph_tip.hide(d)
+        })
+        .on("click", function(d) {
+
+          //console.log(expand)
+
+          //console.log("node click", d, arguments, this, expand[d.group]);
+          expand[d.group] = !expand[d.group];
+
+      init();
+        });
  
+
+    link = nodeg.selectAll("line.link").data(net.links, linkid);
+    link.exit().remove();
+    link.enter().append("line")
+        .attr("class", function(d) {
+          if (d.size == 1) {
+            return "inner"
+          }
+        })
+        .classed("link", true)
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+        .style("stroke-width", function(d) {
+          //console.log(d.size)
+          return d.size || .1;
+        });
+  
+
+  d3.selectAll(".node").moveToFront();
+  d3.selectAll(".hull").moveToFront();
+  d3.selectAll(".inner").moveToFront();
+
   node.call(force.drag);
  
   force.on("tick", function() {
@@ -348,7 +384,9 @@ console.log("node click", d, arguments, this, expand[d.group]);
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
  
-    node.attr("cx", function(d) { return d.x; })
+    node
+        .each(collide(.5))
+        .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
   });
 }
