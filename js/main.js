@@ -1,7 +1,7 @@
 //Angela Fan
 
 var   width = 1060,
-      height = 700,
+      height = 900,
       dr = .01,
       off = 15,
       expand = {};
