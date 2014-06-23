@@ -196,7 +196,7 @@ vis.append("svg:rect")
 //transition("outfile_2013.json");
 
 $(document).ready(
-  transition("outfile_2013.json")
+  transition("outfile_1_2013.json")
 );
 
 $(".slider").on("change", function(){
@@ -209,7 +209,7 @@ function transition(arg) {
 
   if (arg == null) {
     var current_selection = document.getElementById("range").innerHTML;
-    var current_file = "outfile_" + current_selection + ".json";
+    var current_file = "outfile_1_" + current_selection + ".json";
 
     var current_names = current_selection + "_names.csv"
     //console.log(current_file)
