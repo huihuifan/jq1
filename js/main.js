@@ -210,6 +210,8 @@ function transition(arg) {
   if (arg == null) {
     var current_selection = document.getElementById("range").innerHTML;
     var current_file = "outfile_" + current_selection + ".json";
+
+    var current_names = current_selection + "_names.csv"
     //console.log(current_file)
   }
   else {
@@ -370,47 +372,60 @@ function transition(arg) {
               .style("stroke", "#00FF7F");
 
 
-            var net_nodes_length = net.nodes.length;
+            if (net.nodes[1].nodes.length) {
+               var net_nodes_length = net.nodes.length;
 
-            for (var i = 0; i < net_nodes_length; i++) {
+                  for (var i = 0; i < net_nodes_length; i++) {
 
-              var nodes_length = net.nodes[i].nodes.length;
+                    var nodes_length = net.nodes[i].nodes.length;
 
-              for (var j = 0; j < nodes_length; j++) {
-                var current_person = net.nodes[i].nodes[j].id;
-                var names_length = name_data.length;
+                    for (var j = 0; j < nodes_length; j++) {
+                      var current_person = net.nodes[i].nodes[j].id;
+                      var names_length = name_data.length;
 
+                      for (var k = 0; k < names_length; k++) {
 
-                for (var k = 0; k < names_length; k++) {
+                        if (name_data[k].id == current_person) {
+                          // if (k == 1) {
+                          //   console.log(name_data[k].degree)
+                          // }
+                          //console.log("found")
+                          net.nodes[i].nodes[j].degree = name_data[k].degree
 
-                  if (name_data[k].id == current_person) {
-                    // if (k == 1) {
-                    //   console.log(name_data[k].degree)
-                    // }
-                    //console.log("found")
-                    net.nodes[i].nodes[j].degree = name_data[k].degree
-
-                    // if (k == 1) {
-                    //   console.log(net.nodes[i].nodes[j].degree)
-                    // }
+                          // if (k == 1) {
+                          //   console.log(net.nodes[i].nodes[j].degree)
+                          // }
+                        }
+                      }
+                    }
                   }
-                }
-              }
+
+                  //console.log(d)
+
+                  var top_vals = [];
+                  for (var i = 0; i < d.nodes.length; i++) {
+                    if (d.nodes[i].degree) {
+                      top_vals.push({name: d.nodes[i].name, degree: d.nodes[i].degree});
+                    }
+                  }
+
+                  top_vals.sort(function(a, b) { return b.degree - a.degree })
+
+                  top_vals = top_vals.slice(0,3);
+
+                  if (top_vals.length != 0) {
+                    var tip_string = "";
+                    for (var i = 0; i < top_vals.length; i++) {
+                      string = "<br>" + top_vals[i].name + ", Degree: " + top_vals[i].degree;
+                      tip_string = tip_string.concat(string)
+                    }
+
+                    graph_tip.html("<strong>Top interactors: </strong>" + tip_string);
+                    graph_tip.show(d);
+                  }
+
             }
-
-            //console.log(d)
-
-            var top_vals = [];
-            for (var i = 0; i < d.nodes.length; i++) {
-              if (d.nodes[i].degree) {
-                top_vals.push({name: d.nodes[i].name, degree: d.nodes[i].degree});
-              }
-            }
-
-            //top_vals.sort(function(a, b){return b-a});
-
-            graph_tip.html("<strong>Lab: </strong>" + d.group + "<br><strong>Number of members: </strong>" + d.size);
-            graph_tip.show(d);
+           
           })
           .on("mouseout", function(d) {
             d3.select(this)
