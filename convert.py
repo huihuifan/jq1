@@ -5,6 +5,7 @@ import argparse
 import networkx as nx
 import community
 from networkx.readwrite import json_graph
+#from igraph import *
  
  
 def graphmltojson(graphfile, outfile):
@@ -18,6 +19,11 @@ def graphmltojson(graphfile, outfile):
 	G = nx.read_graphml(graphfile)
 	G = nx.Graph(G)
 	#G = nx.DiGraph.to_undirected(G)
+
+	#karate = Nexus.get(G)
+	#cl = karate.community_fastgreedy()
+	#k = 57
+	#cl.as_clustering(k).membership
 
 	#finds best community using louvain
 	partition = community.best_partition(G)
