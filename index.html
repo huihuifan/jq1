@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Jq1 Coauthorship Network</title>
+  
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css"></link>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+  
+</head>
+<body>
+
+	<div id="page_header">
+    <div id="page_title">Jq1 Co-authorship Network</div>
+    <div id="page_description">Collaboration between scientists based on co-authorship on papers.
+      <br>Each circle represents a community of scientists. Click on a community to see all of the individuals. Mouseover a community to see which scientists are the most interconnected.
+      <br>Links between scientists and communities represent co-authorship. Use the slider to change the year.
+    </div>
+  </div>
+
+  <div id="page_body">
+    <input type="range" min="2006" max="2014" value="2013" step="1" onchange="showValue(this.value)" class="slider"/>
+    <span id="range">2013</span>
+
+    <script type="text/javascript">
+      function showValue(newValue) 
+      {
+        document.getElementById("range").innerHTML = newValue;
+      }
+    
+    </script>
+  </div>
+	
+  <script src="js/main.js"></script>
+
+  <div id="pad_div">
+  </div>
+  
+</body>
