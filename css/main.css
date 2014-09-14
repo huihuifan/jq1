@@ -58,13 +58,14 @@ text-align: center;
   margin: 0px auto 0px auto;
   line-height: 50px;
   text-align: center;
+  font-weight: bold;
 }
 
 #page_description {
   margin: 0px auto 0px auto;
   left: 0;
   right: 0;
-  font-size: 14px;
+  font-size: 12px;
   text-align: center;
   color: black;
   font-family: Trebuchet, sans-serif;
