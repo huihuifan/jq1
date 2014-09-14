@@ -229,8 +229,13 @@ function transition(arg) {
   d3.selectAll(".inner link").remove();
   d3.selectAll("g").remove();
 
+  var current_year = current_file.split("_")[2].split(".")[0];
 
-  d3.csv("2011_degree.csv", function(error, name_data) {
+  var degree_file = current_year + "_degree.csv";
+
+  //console.log(degree_file)
+
+  d3.csv(degree_file, function(error, name_data) {
     name_data.forEach(function(d) {
       d.id = d.Id;
       d.name = d.name;
